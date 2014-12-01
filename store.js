@@ -5,7 +5,9 @@ var fs = require('fs'),
 
 
 var options = {
-    tmp: __dirname + "/downloads"
+    tmp: __dirname + "/downloads",
+    uploads: 1
+
 }
 
 var torrents = [];
