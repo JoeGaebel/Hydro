@@ -97,7 +97,7 @@ app.get('/loaded', function(req, res) {
 
 });
 
-app.get('/torrent/files', function(req, res) {
+app.get('/torrent/stream', function(req, res) {
     var file = store.findmp4();
     if (!file)
         return res.send(404);
