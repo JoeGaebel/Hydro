@@ -1,0 +1,9 @@
+.TextWrapLeft{
+clear:right;
+float:left;
+margin: 10px;
+}
+
+.background-theatre{
+        background: url('theatre.jpg');
+}
