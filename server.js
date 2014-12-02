@@ -3,20 +3,18 @@
 // set up ========================
 var express = require('express');
 var app = express(); // create our app w/ express
-var mongoose = require('mongoose'); // mongoose for mongodb
 var morgan = require('morgan'); // log requests to the console (express4)
 var bodyParser = require('body-parser'); // pull information from HTML POST (express4)
 var methodOverride = require('method-override'); // simulate DELETE and PUT (express4)
 var http = require("http");
 var https = require("https");
-var store = require("./store");
-var pump = require("pump");
+var store = require("./store"); //Store controls handling of torrent streams (AKA engines)
+var pump = require("pump"); //pump and mime are used to stream the data
 var mime = require("mime");
 var rangeParser = require("range-parser");
 
 // configuration =================
 
-//mongoose.connect('mongodb://node:node@mongo.onmodulus.net:27017/uwO3mypu');     // connect to mongoDB database on modulus.io
 
 app.use(express.static(__dirname + '/public')); // set the static files location /public/img will be /img for users
 app.use(morgan('dev')); // log every request to the console
@@ -30,12 +28,6 @@ app.use(bodyParser.json({
 app.use(methodOverride());
 
 
-// app.use(function(req, res, next) {
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
-
 
 
 
@@ -46,8 +38,9 @@ app.get('/watch', function(req, res) {
     res.sendfile('./public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 });
 
-//req.query.keywords accesses the keywords from the form
 
+//Scrape the external API, and return a JSON of movie titles
+//Used to populate the search after keywords have been specified
 app.get('/search', function(req, res) {
     var query = "https://yts.re/api/list.json?limit=50&keywords=" + req.query.keywords;
     console.log("I'm sending:" + query);
@@ -65,6 +58,9 @@ app.get('/search', function(req, res) {
         })
 });
 
+
+//The external YTS api doesn't provide a description for the movie
+//So this call is used to scrape IMDB based on the imdbCode specified
 app.get('/description', function(req, res) {
     var query = "http://www.omdbapi.com/?plot=short&r=json&i=" + req.query.i;
     console.log("I'm sending:" + query);
@@ -82,12 +78,15 @@ app.get('/description', function(req, res) {
         })
 });
 
+//This call creates a torrent engine in the store
+//Body must contain a magnet link
 app.post('/torrent', function(req, res) {
     store.begin(req.body.magnet);
     console.log("**********************I began!");
 });
 
-
+//This function returns once the torrent is ready to stream
+//This comes in handy when you want to wait before you show the video window
 app.get('/loaded', function(req, res) {
     var torrent = store.get();
     torrent.once("ready", function() {
@@ -97,6 +96,7 @@ app.get('/loaded', function(req, res) {
 
 });
 
+//This route pipes the stream of the torrent selected by the post to /torrent
 app.get('/torrent/stream', function(req, res) {
     var file = store.findmp4();
     if (!file)
@@ -135,29 +135,3 @@ app.get('/torrent/stream', function(req, res) {
 // listen (start app with node server.js) ======================================
 app.listen(80);
 console.log("App listening on port 80");
-
-
-
-
-//====================Now some streaming stuff
-// var server = http.createServer();
-// server.listen(8000);
-// server.on('request', function(req, res) {
-//     var doodad = new Doodad();
-//     res.writeHead(200, {
-//         'Content-Type': 'text/doodad'
-//     });
-//     res.end(doodad);
-// });
-
-// var torrentStream = require('torrent-stream');
-// var engine = torrentStream('magnet:?xt=urn:btih:84d8304fed96fda24ae555023a9e693b79b2d3f4&dn=Guardians+of+the+Galaxy+2014+RETAIL+DVDRip+X264-PLAYNOW&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Ftracker.publicbt.com%3A80&tr=udp%3A%2F%2Ftracker.istole.it%3A6969&tr=udp%3A%2F%2Fopen.demonii.com%3A1337');
-// var stream;
-// engine.on('ready', function() {
-//     engine.files.forEach(function(file) {
-//         console.log('filename:', file.name);
-//         stream = file.createReadStream();
-//         console.log("I ran!");
-//         // stream is readable stream to containing the file content
-//     });
-// })

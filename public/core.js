@@ -9,31 +9,31 @@ app.config(function($routeProvider, $locationProvider) {
     $routeProvider
 
     // route for the home page
-    .when('/', {
+    .when('/', { //Handle the search page
         templateUrl: 'search.html',
         controller: 'mainController'
     })
 
     // route for the about page
-    .when('/watch', {
+    .when('/watch', { //Handle the watch page
         templateUrl: 'watch.html',
         controller: 'watchController'
     })
-    $locationProvider.html5Mode(true);
+    $locationProvider.html5Mode(true); //I don't want ugly urls
 
 });
 
 
 app.controller('mainController', function($scope, $http, $resource, $window, $route) {
     var Torrent = $resource('/torrent');
-    var loaded = $resource('/loaded');
+    var loaded = $resource('/loaded'); //This allows easy gets/posts/puts with simple calls
     $scope.formData = {};
-    $scope.dis = false;
+    $scope.dis = false; //Switch to enable/disable the search button
     $scope.torrents = {};
 
 
 
-    $scope.$on('theatre', function() {
+    $scope.$on('theatre', function() { //Set the watch view to look all theatre-y
         $scope.bodyStyle = {
             background: "url('theatre.jpg') no-repeat center center fixed",
             "background-color": "black",
@@ -43,12 +43,12 @@ app.controller('mainController', function($scope, $http, $resource, $window, $ro
     });
 
 
-    $scope.watch = function(uri) {
+    $scope.watch = function(uri) { //When the user selects a movie, 
 
-        Torrent.save({
+        Torrent.save({ //Make a post to /torrents with the magnet uri
             magnet: uri
-        }); //Send a post to /torrents with the selected magnet uri
-        loaded.get(function() {
+        });
+        loaded.get(function() { //Wait until it's ready, then transition to the watch page
             $window.location.href = '/watch';
         });
     }
@@ -71,7 +71,8 @@ app.controller('mainController', function($scope, $http, $resource, $window, $ro
                         $scope.dis = false;
 
                     } else
-                        populateDescription(data.MovieList);
+                        populateDescription(data.MovieList); //Once titles have been populated, get their descriptions
+                    //from imdb
 
 
                 })
@@ -94,7 +95,7 @@ app.controller('mainController', function($scope, $http, $resource, $window, $ro
         })
             .success(function(data, status, headers, config) {
                 res({
-                    'Plot': data.Plot,
+                    'Plot': data.Plot, //Set the plot, and which iteration they are
                     'i': i
                 });
 
@@ -128,6 +129,6 @@ app.controller('mainController', function($scope, $http, $resource, $window, $ro
 });
 
 app.controller('watchController', function($scope) {
-    $scope.$emit('theatre');
+    $scope.$emit('theatre'); //When the theatre view is on, tell mainController to set the background
 
 });
