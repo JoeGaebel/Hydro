@@ -43,7 +43,7 @@ app.get('/watch', function(req, res) {
 //Used to populate the search after keywords have been specified
 app.get('/search', function(req, res) {
     var query = "https://yts.re/api/list.json?limit=50&keywords=" + req.query.keywords;
-    console.log("I'm sending:" + query);
+    console.log("Searching...");
     https.get(query,
         function(getres) {
             // Buffer the body entirely for processing as a whole.
@@ -63,7 +63,7 @@ app.get('/search', function(req, res) {
 //So this call is used to scrape IMDB based on the imdbCode specified
 app.get('/description', function(req, res) {
     var query = "http://www.omdbapi.com/?plot=short&r=json&i=" + req.query.i;
-    console.log("I'm sending:" + query);
+    console.log("Getting description....");
     http.get(query,
         function(getres) {
             // Buffer the body entirely for processing as a whole.
@@ -79,10 +79,11 @@ app.get('/description', function(req, res) {
 });
 
 //This call creates a torrent engine in the store
+//Used to select a particular torrent to begin torrening
 //Body must contain a magnet link
-app.post('/selectTorrent', function(req, res) {
+app.post('/select', function(req, res) {
     store.begin(req.body.magnet);
-    console.log("**********************I began!");
+    //  console.log("**********************I began!");
 });
 
 //This function returns once the torrent is ready to stream
@@ -90,7 +91,8 @@ app.post('/selectTorrent', function(req, res) {
 app.get('/isLoaded', function(req, res) {
     var torrent = store.get();
     torrent.once("ready", function() {
-        console.log("I'm ready!!!!");
+        console.log("Torrent Ready!");
+        store.findmp4().select(); //Hack, but a small one
         res.send();
     })
 
@@ -98,10 +100,10 @@ app.get('/isLoaded', function(req, res) {
 
 //This route pipes the stream of the torrent selected by the post to /torrent
 app.get('/stream', function(req, res) {
+    console.log("Steaming...");
     var file = store.findmp4();
     if (!file)
         return res.send(404);
-    file.select();
     var range = req.headers.range;
     range = range && rangeParser(file.length, range)[0];
     res.setHeader('Accept-Ranges', 'bytes');
