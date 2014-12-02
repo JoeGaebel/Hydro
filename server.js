@@ -80,14 +80,14 @@ app.get('/description', function(req, res) {
 
 //This call creates a torrent engine in the store
 //Body must contain a magnet link
-app.post('/torrent', function(req, res) {
+app.post('/selectTorrent', function(req, res) {
     store.begin(req.body.magnet);
     console.log("**********************I began!");
 });
 
 //This function returns once the torrent is ready to stream
 //This comes in handy when you want to wait before you show the video window
-app.get('/loaded', function(req, res) {
+app.get('/isLoaded', function(req, res) {
     var torrent = store.get();
     torrent.once("ready", function() {
         console.log("I'm ready!!!!");
@@ -97,7 +97,7 @@ app.get('/loaded', function(req, res) {
 });
 
 //This route pipes the stream of the torrent selected by the post to /torrent
-app.get('/torrent/stream', function(req, res) {
+app.get('/stream', function(req, res) {
     var file = store.findmp4();
     if (!file)
         return res.send(404);

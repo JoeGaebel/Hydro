@@ -25,8 +25,8 @@ app.config(function($routeProvider, $locationProvider) {
 
 
 app.controller('mainController', function($scope, $http, $resource, $window, $route) {
-    var Torrent = $resource('/torrent');
-    var loaded = $resource('/loaded'); //This allows easy gets/posts/puts with simple calls
+    var Torrent = $resource('/selectTorrent');
+    var loaded = $resource('/isLoaded'); //Resource allows easy gets/posts/puts with simple calls
     $scope.formData = {};
     $scope.dis = false; //Switch to enable/disable the search button
     $scope.torrents = {};
