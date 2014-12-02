@@ -92,8 +92,9 @@ app.get('/isLoaded', function(req, res) {
     var torrent = store.get();
     torrent.once("ready", function() {
         console.log("Torrent Ready!");
-        store.findmp4().select(); //Hack, but a small one
         res.send();
+        if (store.findmp4())
+            store.findmp4().select(); //Hack, but a small one
     })
 
 });
@@ -104,6 +105,7 @@ app.get('/stream', function(req, res) {
     var file = store.findmp4();
     if (!file)
         return res.send(404);
+    file.select();
     var range = req.headers.range;
     range = range && rangeParser(file.length, range)[0];
     res.setHeader('Accept-Ranges', 'bytes');
