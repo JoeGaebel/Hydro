@@ -13,6 +13,7 @@ particular movie, the webserver begins torrenting the movie, and streams the pri
 
 Current limiations:
 -Single movie limit: The server is setup so that only one movie can be torrented from the server at a time. Multiple users can recieve the stream from the /watch page, however once a user selects a movie title, any already existing streaming-process gets erased.
+
 -Legality issues: The webserver where this project runs *downloads* mp4 files. As such, there is the possibility of legal ramifications due to the storage of copyrighted material. Each torrent is deleted as another one is loaded, however the most recently selected torrent stays on the server until otherwise deleted.
 
 The project achieves it's initial goal, so I probably won't get around to addressing these limitations. Feel free to build off of my code, for where would we be without standing on the shoulders of giants.
