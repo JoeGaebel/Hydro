@@ -12,6 +12,7 @@ the search keywords, including movie titles, description, and movie posters. Onc
 particular movie, the webserver begins torrenting the movie, and streams the prioritized pieces to any HTML5 video compatible browser. 
 
 Current limiations:
+
 -Single movie limit: The server is setup so that only one movie can be torrented from the server at a time. Multiple users can recieve the stream from the /watch page, however once a user selects a movie title, any already existing streaming-process gets erased.
 
 -Legality issues: The webserver where this project runs *downloads* mp4 files. As such, there is the possibility of legal ramifications due to the storage of copyrighted material. Each torrent is deleted as another one is loaded, however the most recently selected torrent stays on the server until otherwise deleted.
