@@ -21,7 +21,7 @@
     <table class="table">
         <tr ng-repeat="torrent in torrents"><td>
             <img ng-src={{torrent.CoverImage}} class="TextWrapLeft">
-            <a href="" ng-click="watch(torrent.TorrentMagnetUrl)"><b>{{torrent.MovieTitleClean}}</b></a><br>
+            <a href="" ng-click="watch(torrent.TorrentMagnetUrl)"><b>{{torrent.MovieTitleClean}} {{torrent.Quality}}</b></a><br>
             Seeds: {{torrent.TorrentSeeds}}<br>
             Peers: {{torrent.TorrentPeers}}<br>
         {{torrent.Plot}}</td>
