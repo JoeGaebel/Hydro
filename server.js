@@ -42,7 +42,7 @@ app.get('/watch', function(req, res) {
 //Scrape the external API, and return a JSON of movie titles
 //Used to populate the search after keywords have been specified
 app.get('/search', function(req, res) {
-    var query = "https://yts.re/api/list.json?limit=50&keywords=" + req.query.keywords;
+    var query = "https://yts.re/api/list.json?limit=10&keywords=" + req.query.keywords;
     console.log("Searching...");
     https.get(query,
         function(getres) {

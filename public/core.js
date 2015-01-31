@@ -58,6 +58,7 @@ app.controller('mainController', function($scope, $http, $resource, $window, $ro
 
         $scope.error = '';
         if ($scope.formData.text != undefined) {
+            $scope.error = 'Searching...';
             $scope.dis = true;
             $http.get('/search', {
                 params: {
@@ -77,8 +78,10 @@ app.controller('mainController', function($scope, $http, $resource, $window, $ro
 
                 })
                 .error(function(data, status, headers, config) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
+                    if (data.error) {
+                        $scope.error = data.error;
+                        $scope.dis = false;
+                    }
                 });
         }
     }
@@ -121,6 +124,7 @@ app.controller('mainController', function($scope, $http, $resource, $window, $ro
 
         $scope.torrents = torrentData;
         $scope.dis = false;
+        $scope.error = '';
     }
 
 
