@@ -1,5 +1,7 @@
 Hydro
 ==========
+![hydro](https://cloud.githubusercontent.com/assets/9356287/22311782/1bd53126-e323-11e6-8651-7daab224b4e4.png)
+<br><br>
 "I would go over to friend's places and want to watch a movie, but they wouldn't be comfortable with torrenting, or didn't want to get any extra software in order to do it. My idea was to develop an internet-accessible application which would take care of all the dirty work of torrenting, without the need for any extra software. <b>In short, a torrent streaming web app. </b>"
 
 Hydro is a NodeJS backend, AngularJS front end project which creates a webserver and a sleek graphic user interface.
